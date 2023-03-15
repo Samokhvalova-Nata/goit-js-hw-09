@@ -10,7 +10,7 @@ const refs = {
     hoursEl: document.querySelector('[data-hours]'),
     minutesEl: document.querySelector('[data-minutes]'),
     secondsEl: document.querySelector('[data-seconds]'),
-}
+};
 const options = {
     enableTime: true,
     time_24hr: true,
@@ -25,6 +25,7 @@ const options = {
         } refs.startBtn.disabled = false;
     },
 };
+
 const timer = {
     intervalId: null,
     isActive: false,
@@ -41,18 +42,21 @@ const timer = {
         }, 1000);
     },
     stop() {
-        if (stopTime = Date.now()) {
-        clearInterval(this.intervalId);
-        this.isActive = false;
-        }
-    }
+        const stopDelay = stopTime - Date.now();
+        setTimeout(() => {
+            clearInterval(this.intervalId);
+            this.isActive = false;
+        }, stopDelay);
+    },
 };
 
 flatpickr(refs.datePicker, options);
-timer.stop();
 
 refs.startBtn.disabled = true;
-refs.startBtn.addEventListener('click', timer.start.bind(timer))
+refs.startBtn.addEventListener('click', () => {
+    timer.start();
+    timer.stop();
+});
 
 function convertMs(ms) {
     const second = 1000;
@@ -66,15 +70,15 @@ const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
 const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
 return { days, hours, minutes, seconds };
-}
+};
 
 function addLeadingZero(value) {
     return String(value).padStart(2, '0');
-}
+};
 
 function updateClockFace({ days, hours, minutes, seconds }) {
     refs.daysEl.textContent = `${days}`;
     refs.hoursEl.textContent = `${hours}`;
     refs.minutesEl.textContent = `${minutes}`;
     refs.secondsEl.textContent = `${seconds}`;
-}
+};
